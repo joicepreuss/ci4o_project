@@ -105,3 +105,4 @@ cities = [
     "Phoenix",
     "Salt Lake City",
 ]
+
