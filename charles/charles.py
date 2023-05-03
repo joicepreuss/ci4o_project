@@ -25,6 +25,9 @@ class Individual:
     def get_neighbours(self, func, **kwargs):
         raise Exception("You need to monkey patch the neighbourhood function.")
 
+    def index(self,value):
+        return self.representation.index(value)
+
     def __len__(self):
         return len(self.representation)
 
@@ -57,6 +60,7 @@ class Population:
         Args:
             func (function): A function that takes a population and returns a new population
         """
+        best_individuals = []
         for i in range(gens):
             new_pop = []
 
@@ -95,8 +99,12 @@ class Population:
             self.individuals = new_pop
             if self.optim == 'max':
                 print(f'Best individual: {max(self, key=attrgetter("fitness"))}')
+                best_individuals.append(max(self, key=attrgetter("fitness")))
+
             elif self.optim == 'min':
                 print(f'Best individual: {min(self, key=attrgetter("fitness"))}')
+                best_individuals.append(min(self, key=attrgetter("fitness")))
+        return best_individuals
 
 
     def __len__(self):

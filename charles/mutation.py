@@ -1,4 +1,4 @@
-from random import randint
+from random import randint, sample
 
 
 def binary_mutation(individual):
@@ -25,7 +25,24 @@ def binary_mutation(individual):
     return individual
 
 
+def swap_mutation(individual):
+    """
+    Swap mutation for a GA individual
+
+    Args:
+        individual (Individual): A GA individual from charles.py
+
+    Returns:
+        Individual: Mutated Individual
+    """
+
+    mut_indexes = sample(range(len(individual)), 2)
+    individual[mut_indexes[0]], individual[mut_indexes[1]] = individual[mut_indexes[1]], individual[mut_indexes[0]]
+    return individual
+
+
 if __name__ == '__main__':
-    test = [0,0,0,0,0,0,0,0]
-    test = binary_mutation(test)
+    test = [1, 2, 3, 4, 5, 6]
+    # test = binary_mutation(test)
+    test = swap_mutation(test)
 
