@@ -6,18 +6,24 @@ class Individual:
     def __init__(
         self,
         representation=None,
+        custom_representation=False,
+        custom_representation_kwargs=None,
         size=None,
         replacement=True,
         valid_set=None,
     ):
-        if representation == None:
+        if custom_representation == False:
             if replacement == True:
                 self.representation = [choice(valid_set) for i in range(size)]
             elif replacement == False:
                 self.representation = sample(valid_set, size)
         else:
-            self.representation = representation
+            self.custom_representation_kwargs = custom_representation_kwargs
+            self.representation = self.custom_representation()
         self.fitness = self.get_fitness()
+
+    def custom_representation(self):
+        raise Exception("You need to monkey patch the representation path.")            
 
     def get_fitness(self):
         raise Exception("You need to monkey patch the fitness path.")
@@ -40,7 +46,6 @@ class Individual:
     def __repr__(self):
         return f"Individual(size={len(self.representation)}); Fitness: {self.fitness}"
 
-
 class Population:
     def __init__(self, size, optim, **kwargs):
         self.individuals = []
@@ -52,6 +57,8 @@ class Population:
                     size=kwargs["sol_size"],
                     replacement=kwargs["replacement"],
                     valid_set=kwargs["valid_set"],
+                    custom_representation=kwargs["custom_representation"],
+                    custom_representation_kwargs=kwargs["custom_representation_kwargs"]
                 )
             )
 
@@ -105,7 +112,6 @@ class Population:
                 print(f'Best individual: {min(self, key=attrgetter("fitness"))}')
                 best_individuals.append(min(self, key=attrgetter("fitness")))
         return best_individuals
-
 
     def __len__(self):
         return len(self.individuals)

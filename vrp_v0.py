@@ -6,7 +6,7 @@ from data.vrp_data import distance_matrix
 from random import choices, sample
 from copy import deepcopy
 
-def get_representation(max_num_vehicles,cities, initial_city):
+def custom_representation(self):
     """A function to create a random representation of the problem
     Args:
         num_vehicles (int): number of vehicles
@@ -15,6 +15,10 @@ def get_representation(max_num_vehicles,cities, initial_city):
         matrix: a matrix representing
 
     """
+    cities = self.custom_representation_kwargs['cities']
+    initial_city = self.custom_representation_kwargs['initial_city']
+    max_num_vehicles = self.custom_representation_kwargs['max_num_vehicles']
+
     cities = set(cities) # convert to set to remove duplicates
     representation = []
     cities.remove(initial_city) # remove the initial city from the list - it is accounted in the fitness function
@@ -38,30 +42,33 @@ def get_fitness(self):
     for vehicles in range(num_vehicles):
         for city in range(len(self.representation[vehicles])):
             fitness += distance_matrix[self.representation[vehicles][city - 1]][self.representation[vehicles][city]]
+    print(f'Representation: {self.representation} Fitness: {fitness}')
     return int(fitness)
 
-#
-# def get_neighbours(self):
-#     """A neighbourhood function for the TSP problem. Switches
-#     indexes around in pairs.
-#
-#     Returns:
-#         list: a list of individuals
-#     """
-#     n = [deepcopy(self.representation) for i in range(len(self.representation) - 1)]
-#
-#     for count, i in enumerate(n):
-#         i[count], i[count + 1] = i[count + 1], i[count]
-#
-#     n = [Individual(i) for i in n]
-#     return n
-#
-#
-# # Monkey patching
-# Individual.get_fitness = get_fitness
+# Monkey patching
+Individual.get_fitness = get_fitness
+Individual.custom_representation = custom_representation
 # Individual.get_neighbours = get_neighbours
-#
-#
+
+max_cars = 3
+cities = [0,1,2,3,4,5,6,7,8]
+initial_city = 4
+
+pop = Population(
+    size=25,
+    sol_size=None,
+    replacement=None,
+    valid_set=None,
+    custom_representation=True,
+    custom_representation_kwargs = {
+        'cities': cities, 
+        'initial_city': initial_city, 
+        'max_num_vehicles': max_cars
+    },
+    optim="min")
+
+print(pop.__repr__)
+
 # pop = Population(
 #     representation = get_representation(3, [i for i in range(len(distance_matrix[0]))], 0),
 #     optim="min")
