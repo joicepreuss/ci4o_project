@@ -7,7 +7,7 @@ Welcome! This is a repository for CI4O project !
 | 20220593 | Joice Preuss | 
 | 20220594 | Jaime Kuei | 
 | 20220595 | Maxwell Marcos | 
-| | Jannick Kickler |
+| 20220630| Jannik Kickler |
 
 ## Contents
 This repository is organanized as follows:
