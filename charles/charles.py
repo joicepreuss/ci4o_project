@@ -12,14 +12,17 @@ class Individual:
         replacement=True,
         valid_set=None,
     ):
-        if custom_representation == False:
-            if replacement == True:
-                self.representation = [choice(valid_set) for i in range(size)]
-            elif replacement == False:
-                self.representation = sample(valid_set, size)
+        if representation:
+            self.representation = representation
         else:
-            self.custom_representation_kwargs = custom_representation_kwargs
-            self.representation = self.custom_representation()
+            if custom_representation == False:
+                if replacement == True:
+                    self.representation = [choice(valid_set) for i in range(size)]
+                elif replacement == False:
+                    self.representation = sample(valid_set, size)
+            else:
+                self.custom_representation_kwargs = custom_representation_kwargs
+                self.representation = self.custom_representation()
         self.fitness = self.get_fitness()
 
     def custom_representation(self):
@@ -51,6 +54,7 @@ class Population:
         self.individuals = []
         self.size = size
         self.optim = optim
+        self.is_custom_representation = kwargs["custom_representation"]
         for _ in range(size):
             self.individuals.append(
                 Individual(
@@ -62,7 +66,7 @@ class Population:
                 )
             )
 
-    def evolve(self, gens,select, mutate, crossover, xo_prob ,mut_prob, elitism):
+    def evolve(self, gens, select, mutate, crossover, xo_prob, mut_prob, elitism, flatten=None, unflatten=None):
         """Evolve the population
         Args:
             func (function): A function that takes a population and returns a new population
@@ -80,6 +84,12 @@ class Population:
             while len(new_pop) < self.size:
                 parent1, parent2 = select(self), select(self)
 
+                # As we have a custom representation we need to flatten the representation
+                # to be able to apply the crossover and mutation operators
+                if self.is_custom_representation:
+                    parent1, structure1 = flatten(parent1)
+                    parent2, structure2 = flatten(parent2)
+
                 # XO
                 if random() < xo_prob:
                     offspring1, offspring2 = crossover(parent1, parent2)
@@ -91,6 +101,12 @@ class Population:
                     offspring1 = mutate(offspring1)
                 if random() < mut_prob:
                     offspring2 = mutate(offspring2)
+
+                # As we applied the mutation and crossover operators to the flattened representation
+                # we need to unflatten the representation to be able to create the new individuals
+                if self.is_custom_representation:
+                    offspring1 = unflatten(offspring1, structure1)
+                    offspring2 = unflatten(offspring2, structure2)
 
                 new_pop.append(Individual(representation=offspring1))
                 if len(new_pop) < self.size:
