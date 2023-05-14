@@ -41,6 +41,21 @@ def swap_mutation(individual):
     return individual
 
 
+def invertion_mutation(individual):
+    """
+    Invertion mutation for a GA individual
+
+    Args:
+        individual (Individual): A GA individual from charles.py
+
+    Returns:
+        Individual: Mutated Individual
+    """
+    mut_indexes = sample(range(len(individual)), 2)
+    individual[mut_indexes[0]:mut_indexes[1]] = individual[mut_indexes[0]:mut_indexes[1]][::-1]
+    return individual
+
+
 if __name__ == '__main__':
     test = [1, 2, 3, 4, 5, 6]
     # test = binary_mutation(test)
