@@ -6,8 +6,8 @@ from data.vrp_data import distance_matrix
 from random import choices, sample
 from copy import deepcopy
 from charles.selection import fps, tournament_sel
-from charles.mutation import swap_mutation
-from charles.crossover import cycle_xo
+from charles.mutation import swap_mutation, invertion_mutation
+from charles.crossover import cycle_xo, pmx
 
 def flatten(representation):
     # flatten the representation for vrp [[4,2,3], [4], [4,1,5,0]] -> [2,3,1,5,0], (4, [3,1,4])
@@ -86,11 +86,11 @@ pop = Population(
     optim="min")
 
 pop.evolve(
-    gens=500, 
+    gens=200, 
     select=tournament_sel, 
-    crossover=cycle_xo, 
+    crossover=pmx, 
     xo_prob=0.95, 
-    mutate=swap_mutation, 
+    mutate=invertion_mutation, 
     mut_prob=0.4,
     elitism=True,
     flatten=flatten,
