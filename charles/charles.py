@@ -13,6 +13,7 @@ class Individual:
         valid_set=None,
     ):
         if representation:
+            self.custom_representation_kwargs = custom_representation_kwargs
             self.representation = representation
         else:
             if custom_representation == False:
@@ -55,6 +56,7 @@ class Population:
         self.size = size
         self.optim = optim
         self.is_custom_representation = kwargs["custom_representation"]
+        self.custom_representation_kwargs = kwargs["custom_representation_kwargs"]
         for _ in range(size):
             self.individuals.append(
                 Individual(
@@ -108,9 +110,9 @@ class Population:
                     offspring1 = unflatten(offspring1, structure1)
                     offspring2 = unflatten(offspring2, structure2)
 
-                new_pop.append(Individual(representation=offspring1))
+                new_pop.append(Individual(representation=offspring1, custom_representation=self.is_custom_representation, custom_representation_kwargs=self.custom_representation_kwargs))
                 if len(new_pop) < self.size:
-                    new_pop.append(Individual(representation=offspring2))
+                    new_pop.append(Individual(representation=offspring2, custom_representation=self.is_custom_representation, custom_representation_kwargs=self.custom_representation_kwargs))
 
             if elitism:
                 if self.optim == 'max':
