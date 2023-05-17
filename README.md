@@ -9,6 +9,8 @@ Welcome! This is a repository for CI4O project !
 | 20220595 | Maxwell Marcos | 
 | 20220630 | Jannik Kickler | 
 |  | Bianca Victor |
+=======
+
 
 ## Contents
 This repository is organanized as follows:
