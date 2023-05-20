@@ -6,8 +6,9 @@ from data.vrp_data import distance_matrix
 from random import choices, sample
 from copy import deepcopy
 from charles.selection import fps, tournament_sel
-from charles.mutation import swap_mutation, invertion_mutation
+from charles.mutation import swap_mutation, invertion_mutation, mutate_structure
 from charles.crossover import cycle_xo, pmx
+from charles.utils import flatten, unflatten
 
 def flatten(representation):
     # flatten the representation for vrp [[4,2,3], [4], [4,1,5,0]] -> [2,3,1,5,0], (4, [3,1,4])
@@ -92,14 +93,8 @@ pop.evolve(
     xo_prob=0.95, 
     mutate=invertion_mutation, 
     mut_prob=0.4,
-    elitism=True,
+    elitism=False,
     flatten=flatten,
-    unflatten=unflatten
+    unflatten=unflatten,
+    mutate_structure=mutate_structure
     )
-
-# pop = Population(
-#     representation = get_representation(3, [i for i in range(len(distance_matrix[0]))], 0),
-#     optim="min")
-#
-#hill_climb(pop)
-#sim_annealing(pop)

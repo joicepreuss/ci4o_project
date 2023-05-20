@@ -48,7 +48,7 @@ class Individual:
         self.representation[position] = value
 
     def __repr__(self):
-        return f"Individual(size={len(self.representation)}); Fitness: {self.fitness}"
+        return f"Individual(size={len(self.representation)}); Fitness: {self.fitness}, Representation: {self.representation}"
 
 class Population:
     def __init__(self, size, optim, **kwargs):
@@ -68,7 +68,7 @@ class Population:
                 )
             )
 
-    def evolve(self, gens, select, mutate, crossover, xo_prob, mut_prob, elitism, flatten=None, unflatten=None):
+    def evolve(self, gens, select, mutate, crossover, xo_prob, mut_prob, elitism, flatten=None, unflatten=None, mutate_structure=None):
         """Evolve the population
         Args:
             func (function): A function that takes a population and returns a new population
@@ -103,6 +103,12 @@ class Population:
                     offspring1 = mutate(offspring1)
                 if random() < mut_prob:
                     offspring2 = mutate(offspring2)
+
+                # Mutation Structure.
+                if random() < mut_prob:
+                    structure1 = mutate_structure(structure1)
+                if random() < mut_prob:
+                    structure2 = mutate_structure(structure2)
 
                 # As we applied the mutation and crossover operators to the flattened representation
                 # we need to unflatten the representation to be able to create the new individuals
