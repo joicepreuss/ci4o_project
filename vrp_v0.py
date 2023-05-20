@@ -2,13 +2,12 @@
 
 from random import sample, randint
 
-from data.vrp_data import distance_matrix
-
-from charles.crossover import cycle_xo, pmx
-from charles.utils import flatten, unflatten
-from charles.selection import fps, tournament_sel
 from charles.charles import Population, Individual
+from charles.utils import flatten, unflatten, generate_random_distance_matrix
+from charles.crossover import cycle_xo, pmx
 from charles.mutation import swap_mutation, invertion_mutation, mutate_structure
+from charles.experiments import experiment
+from charles.selection import fps, tournament_sel
 
 
 def custom_representation(self):
@@ -75,36 +74,110 @@ def get_fitness(self):
 Individual.get_fitness = get_fitness
 Individual.custom_representation = custom_representation
 
-# Define the parameters to create the population.
+nb_cities = 100
+distance_matrix = generate_random_distance_matrix(nb_cities)
 max_cars = 5
-cities = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16]
-initial_city = 3
+cities = [i for i in range(len(distance_matrix))]
+initial_city = 4
 
-# Create the population.
-pop = Population(
-                size=100,
-                sol_size=None,
-                replacement=None,
-                valid_set=None,
-                custom_representation=True,
-                custom_representation_kwargs = {
-                    'cities': cities, 
-                    'initial_city': initial_city, 
-                    'max_num_vehicles': max_cars
-                },
-                optim="min"
-                )
+# pop = Population(
+#     size=100,
+#     sol_size=None,
+#     replacement=None,
+#     valid_set=None,
+#     custom_representation=True,
+#     custom_representation_kwargs = {
+#         'cities': cities, 
+#         'initial_city': initial_city, 
+#         'max_num_vehicles': max_cars
+#     },
+#     optim="min"
+#     )
 
-# Evolve the population.
-pop.evolve(
-            gens=200, 
-            select=tournament_sel, 
-            crossover=pmx, 
-            xo_prob=0.95, 
-            mutate=invertion_mutation, 
-            mut_prob=0.4,
-            elitism=False,
-            flatten=flatten,
-            unflatten=unflatten,
-            mutate_structure=mutate_structure
-            )
+# pop.evolve(
+#     gens=200, 
+#     select=tournament_sel, 
+#     crossover=pmx, 
+#     xo_prob=0.95, 
+#     mutate=invertion_mutation, 
+#     mut_prob=0.4,
+#     elitism=False,
+#     flatten=flatten,
+#     unflatten=unflatten,
+#     mutate_structure=mutate_structure
+#     )
+
+pop_params = {
+    'size': 100,
+    'sol_size': None,
+    'replacement': None,
+    'valid_set': None,
+    'custom_representation': True,
+    'custom_representation_kwargs': {
+        'cities': cities,
+        'initial_city': initial_city,
+        'max_num_vehicles': max_cars
+    },
+    'optim': "min"
+}
+N = 50
+stats_test = 'non-parametric'
+
+ga_conf_1 = {
+    'gens': 100,
+    'select': tournament_sel,
+    'crossover': pmx,
+    'xo_prob': 0.95,
+    'mutate': invertion_mutation,
+    'mut_prob': 0.1,
+    'elitism': True,
+    'flatten': flatten,
+    'unflatten': unflatten,
+    'mutate_structure': mutate_structure
+}
+ga_conf_2 = {
+    'gens': 100,
+    'select': tournament_sel,
+    'crossover': pmx,
+    'xo_prob': 0.95,
+    'mutate': invertion_mutation,
+    'mut_prob': 0.5,
+    'elitism': True,
+    'flatten': flatten,
+    'unflatten': unflatten,
+    'mutate_structure': mutate_structure
+}
+ga_conf_3 = {
+    'gens': 100,
+    'select': tournament_sel,
+    'crossover': pmx,
+    'xo_prob': 0.95,
+    'mutate': invertion_mutation,
+    'mut_prob': 0.8,
+    'elitism': True,
+    'flatten': flatten,
+    'unflatten': unflatten,
+    'mutate_structure': mutate_structure
+}
+ga_conf_4 = {
+    'gens': 100,
+    'select': tournament_sel,
+    'crossover': pmx,
+    'xo_prob': 0.5,
+    'mutate': invertion_mutation,
+    'mut_prob': 0.5,
+    'elitism': True,
+    'flatten': flatten,
+    'unflatten': unflatten,
+    'mutate_structure': mutate_structure
+}
+
+experiment(
+    pop_params,
+    N,
+    stats_test,
+    ('ga_095xo_01mut', ga_conf_1),
+    ('ga_095xo_05mut', ga_conf_2),
+    ('ga_095xo_08mut', ga_conf_3),
+    ('ga_05xo_05mut', ga_conf_4)
+    )

@@ -1,3 +1,5 @@
+import numpy as np
+
 def flatten(representation):
     """
     Function to flatten the representation to be able to apply the crossover and mutation operators.
@@ -41,3 +43,8 @@ def unflatten(flat_representation, structure):
     
     return representation
 
+def generate_random_distance_matrix(n):
+    matrix = np.random.randint(1, 1001, size=(n, n))
+    symmetric_matrix = (matrix + matrix.T) / 2
+    np.fill_diagonal(symmetric_matrix, 0)
+    return symmetric_matrix.tolist()

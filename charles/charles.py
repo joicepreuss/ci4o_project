@@ -48,7 +48,7 @@ class Individual:
         self.representation[position] = value
 
     def __repr__(self):
-        return f"Individual(size={len(self.representation)}); Fitness: {self.fitness}, Representation: {self.representation}"
+        return f"Individual(size={len(self.representation)}); Fitness: {self.fitness}"
 
 class Population:
     def __init__(self, size, optim, **kwargs):
@@ -135,9 +135,17 @@ class Population:
                     offspring1 = unflatten(offspring1, structure1)
                     offspring2 = unflatten(offspring2, structure2)
 
-                new_pop.append(Individual(representation=offspring1, custom_representation=self.is_custom_representation, custom_representation_kwargs=self.custom_representation_kwargs))
+                new_pop.append(
+                    Individual(representation=offspring1, 
+                               custom_representation=self.is_custom_representation, 
+                               custom_representation_kwargs=self.custom_representation_kwargs)
+                               )
                 if len(new_pop) < self.size:
-                    new_pop.append(Individual(representation=offspring2, custom_representation=self.is_custom_representation, custom_representation_kwargs=self.custom_representation_kwargs))
+                    new_pop.append(
+                        Individual(representation=offspring2, 
+                                   custom_representation=self.is_custom_representation, 
+                                   custom_representation_kwargs=self.custom_representation_kwargs)
+                                   )
 
             if elitism:
                 if self.optim == 'max':
