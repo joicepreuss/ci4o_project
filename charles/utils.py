@@ -1,22 +1,46 @@
-import seaborn as sns
-import matplotlib.pyplot as plt
-from copy import deepcopy
 import numpy as np
 
 def flatten(representation):
-    # flatten the representation for vrp [[4,2,3], [4], [4,1,5,0]] -> [2,3,1,5,0], (4, [3,1,4])
+    """
+    Function to flatten the representation to be able to apply the crossover and mutation operators.
+    Args:
+    --
+        representation (Individual): An individual from charles.py
+
+    Returns:
+    --
+        flat_representation (list): A list with the representation flattened.
+        flat_structure (list): A list with the structure of the representation. 
+        First element is the initial city and the second element is a list with the number 
+        of cities to be visited by each vehicle. 
+    """
+
     inital_city = representation[0][0]
     structure_representation = [len(car) for car in representation]
     flat_representation = [city for car in representation for idx, city in enumerate(car) if idx != 0]
-    return flat_representation, [inital_city, structure_representation]
+    flat_structure = [inital_city, structure_representation]
+
+    return flat_representation, flat_structure
 
 def unflatten(flat_representation, structure):
-    # unflatten the representation for vrp [2,3,1,5,0], [4], [3,1,4]] -> [[4,2,3], [4], [4,1,5,0]]
+    """
+    Function to unflatten the representation to be able to create the new individuals.
+    Args:
+    --
+        flat_representation (list): A list with the representation flattened.
+        structure (list): A list with the structure of the representation.
+        
+    Returns:
+    --
+    representation (list): A list with the representation unflattened.
+    """
+
     representation = []
     count = 0
     for car in structure[1]:
         representation.append([structure[0]] + flat_representation[count:count+(car-1)])
         count += car-1
+    
     return representation
 
 def generate_random_distance_matrix(n):

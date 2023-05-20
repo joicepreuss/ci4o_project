@@ -1,28 +1,41 @@
-import random
+# CAPACITY CONSTRAINT VEHICLE ROUTING PROBLEM (CVRP)
+
 import math 
+from random import choice, sample, randint
 
 from charles.charles import Population, Individual
-from charles.search import hill_climb, sim_annealing
-# from data.vrp_data import distance_matrix
-from random import choices, sample
-from copy import deepcopy
-from charles.selection import fps, tournament_sel
-from charles.mutation import swap_mutation, invertion_mutation, mutate_structure
-from charles.crossover import cycle_xo, pmx
 from charles.utils import flatten, unflatten, generate_random_distance_matrix
+from charles.crossover import cycle_xo, pmx
+from charles.mutation import swap_mutation, invertion_mutation, mutate_structure
 from charles.experiments import experiment
+from charles.selection import fps, tournament_sel
 
-# CAPACITY CONSTRAINT VEHICLE ROUTING PROBLEM
 
 def custom_representation(self):
-    """A function to create a random representation of the problem
-    Args:
-        num_vehicles (int): number of vehicles
-        num_cities (int): number of cities
-    Returns:
-        matrix: a matrix representing
-
     """
+    - Function to create a random representation of the capacity constraint vehicle routing problem;
+    - Creates a list of lists where each list represents a vehicle. The elements of the list are 
+    tuples in form (city, demand), which are the cities to be visited by that vehicle and the city
+    demand;
+    - Each city is visited by only one vehicle;
+    - Each vehicle has a predefined capacity constraint, which is not allowed to be exceeded;
+    - The first element of each list is the initial city with demand of 0.
+
+    Args:
+    --
+        cities (list): A list of cities to be visited
+        initial_city (int): The initial city from where the vehicles start
+        max_num_vehicles (int): The maximum number of vehicles available
+        car_capacity (int): The capacity of the vehicles
+        demand (list): A list of demands per city
+    
+    Returns:
+    --
+        representation (list): List of lists where each list represents a vehicle. The elements of
+        the list are tuples in form (city, demand), which are the cities to be visited by that 
+        vehicle and the city demand.
+    """
+
     cities = self.custom_representation_kwargs['cities']
     initial_city = self.custom_representation_kwargs['initial_city']
     max_num_vehicles = self.custom_representation_kwargs['max_num_vehicles']
@@ -33,33 +46,41 @@ def custom_representation(self):
     cities[initial_city] = (initial_city, 0)
     cities.remove((initial_city, 0))
 
-    cities = set(cities) # convert to set to remove duplicates
+    cities = set(cities)
     representation = []
 
-    for i in range(1,max_num_vehicles):
+    for _ in range(1, max_num_vehicles):
         carried_capacity = 0    
-        selected_cities = [(initial_city,0)]
-        cities_to_be_visited = random.randint(0, len(cities))
+        selected_cities = [(initial_city, 0)]
+        cities_to_be_visited = randint(0, len(cities))
 
         for city in range(cities_to_be_visited):
-            city = random.choice(list(cities))
+            city = choice(list(cities))
             if carried_capacity + city[1] <= car_capacity:
                 selected_cities.append(city)
                 carried_capacity += city[1]
                 cities.remove(city)
-        cities = [i for i in cities if i not in selected_cities] # remove selected cities from the list
+        cities = [city for city in cities if city not in selected_cities]
         representation.append(selected_cities)
-    representation.append([(initial_city,0)] + cities) # add the remaining cities to the last vehicle
+    representation.append([(initial_city,0)] + cities)
+
     return representation
 
 
 def get_fitness(self):
-    """A simple objective function to calculate distances
-    for the TSP problem.
+    """
+    Function to calculate distances for the CVRP problem. If the capacity of the vehicle is 
+    exceeded, each iteration of exceeding adds 100000 to the fitness.
+
+    Args:
+    --
+        self.representation (Individual): An individual from charles.py
 
     Returns:
-        int: the total distance of the path
+    --
+        fitness (int): The total distance
     """
+
     fitness = 0
     num_vehicles = len(self.representation)
     for vehicles in range(num_vehicles):
@@ -69,14 +90,38 @@ def get_fitness(self):
             if capacity > self.custom_representation_kwargs['car_capacity']:
                 fitness += 100000
             else:
-                fitness += distance_matrix[self.representation[vehicles][city - 1][0]][self.representation[vehicles][city][0]]
-    # print(f'Representation: {self.representation} | Fitness: {fitness}')
+                fitness += distance_matrix[self.representation[
+                    vehicles][city - 1][0]][self.representation[vehicles][city][0]]
+
     return int(fitness)
 
-# Monkey patching
+def calculate_demand(max_cars, car_capacity, cities):
+    """
+    - Function to calculate the demand of each city. The demand of each city is a random number
+    between 10 and the highest demand possible;
+    - the highest demand is the number of cars multiplied by the car capacity divided 
+    by the number of cities minus the initial city.
+
+    Args:
+    --
+        max_cars (int): The maximum number of vehicles available
+        car_capacity (int): The capacity of the vehicles
+        cities (list): A list of cities to be visited
+        initial_city (int): The initial city from where the vehicles start
+
+    Returns:
+    --
+        demand (list): A list of demands per city
+    """
+
+    higehst_demand = math.floor((max_cars * car_capacity) / len(cities))
+    demand = [randint(10, higehst_demand) for city in range(len(cities)) if city != initial_city]
+
+    return demand
+
+# Monkey patching.
 Individual.get_fitness = get_fitness
 Individual.custom_representation = custom_representation
-# Individual.get_neighbours = get_neighbours
 
 nb_cities = 100
 distance_matrix = generate_random_distance_matrix(nb_cities)
@@ -89,40 +134,14 @@ car_capacity = 100
 # highest demand is the number of cars * car capacity divided by the number of cities
 higehst_demand = math.floor((max_cars * car_capacity) / len(cities))
 # Create a list of demands per city
-demand = [random.randint(1, higehst_demand) for city in range(len(cities)) if city != initial_city]
+demand = [randint(1, higehst_demand) for city in range(len(cities)) if city != initial_city]
 
-print(f"NEW RUN: \nCities: {cities} \nInitial City: {initial_city} \nNumber of Cars: {max_cars} \nCar Capacity: {car_capacity}")
-
-# pop = Population(
-#     size=5,
-#     sol_size=None,
-#     replacement=None,
-#     valid_set=None,
-#     custom_representation=True,
-#     custom_representation_kwargs = {
-#         'cities': cities, 
-#         'initial_city': initial_city, 
-#         'max_num_vehicles': max_cars,
-#         "car_capacity": car_capacity,
-#         "demand": demand,
-#         },
-#     optim="min")
-
-# pop.evolve(
-#     gens=30, 
-#     select=tournament_sel, 
-#     crossover=pmx, 
-#     xo_prob=0.95, 
-#     mutate=invertion_mutation, 
-#     mut_prob=0.4,
-#     elitism=True,
-#     flatten=flatten,
-#     unflatten=unflatten,
-#     mutate_structure=mutate_structure
-#     )
+N = 25
+stats_test = 'parametric'
+gens = 10
 
 pop_params = {
-    'size': 100,
+    'size': 25,
     'sol_size': None,
     'replacement': None,
     'valid_set': None,
@@ -136,10 +155,6 @@ pop_params = {
     },
     'optim': "min"
 }
-N = 50
-stats_test = 'parametric'
-gens = 100
-
 ga_conf_1 = {
     'gens': gens,
     'select': tournament_sel,
