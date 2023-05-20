@@ -12,15 +12,18 @@ def perform_statistical_test(df, test_type, level, column='value'):
     """
     Perform a statistical test on a dataframe with multiple levels
     Args:
-        df:
-        test_type:
-        level:
-        column:
+        df: dataframe with the results of the experiment
+        test_type: parametric or non-parametric tests
+        level: the versions to be compared
+        column: value column
 
-    Returns:
+    Returns: Return a plot with the statistical procedures
 
     """
     def plot_post_hoc_tests(original_df,df_post_hoc):
+        '''
+        Ploting pair-wise comparisons as a box-plot
+        '''
         # Converting to long format
         remove = np.tril(np.ones(df_post_hoc.shape), k=0).astype("bool") # removing lower diagonal
         df_post_hoc[remove] = np.nan
@@ -32,7 +35,7 @@ def perform_statistical_test(df, test_type, level, column='value'):
 
         pairs = [(i[1]["index"], i[1]["variable"]) for i in molten_df.iterrows()]
         p_values = [i[1]["value"] for i in molten_df.iterrows()]
-
+        # Adding the pvalues representations for each pair-wise comparison
         annotator = Annotator(
             ax_, pairs, data=original_df, x=f"{level}", y=f"{column}", order=unique_levels
         )
@@ -50,13 +53,15 @@ def perform_statistical_test(df, test_type, level, column='value'):
 
     data_groups = [df[df[level] == lvl][column] for lvl in unique_levels]
 
+    # Statistical tests
+
     if test_type == 'parametric':
         f_stat, p_value = stats.f_oneway(*data_groups)
         print(f"One-way ANOVA results for general significance :\nF-statistic: {f_stat}\nP-value: {p_value}")
         # Post-hoc test
         tukey_results = posthoc_tukey(df, val_col=column, group_col=level)
         ax_ = plot_post_hoc_tests(df, tukey_results)
-        ax_.set_title(f"Post-hoc Tukey test for evaluated models for last generation")
+        ax_.set_title(f"ANOVA F-test for general significance : {p_value}\nPost-hoc Tukey test for evaluated models for last generation")
         return ax_
 
     else:
@@ -65,7 +70,7 @@ def perform_statistical_test(df, test_type, level, column='value'):
         # Post-hoc test
         dunn_results = posthoc_dunn(df, val_col=column, group_col=level)
         ax_ = plot_post_hoc_tests(df, dunn_results)
-        ax_.set_title(f"Post-hoc Dunn test for evaluated models for last generation")
+        ax_.set_title(f"Kruskal-Wallis test for general significance : {p_value}\nPost-hoc Dunn test for evaluated models for last generation")
         return ax_
 
 
@@ -73,19 +78,23 @@ def experiment(experiment_name,pop_params,N,stats_test, *args):
     """
 
     Args:
-        N:
+        experiment_name : name of the experiment and the folder created in the results folder
+        pop_params : dictionary with the population parameters of the GA algorithm
+        N: Number of iterations for each tested version
+        stats_test : parametric or non-parametric test to be performed
         *args: (version, GA)
 
-    Returns:
+    Returns: Plot with the statistical results and file containing the experiment data (csv file with the results and a png image with the charts)
 
     """
+
     # Create a folder for the experiment in the results folder
     results_folder = os.path.join(os.getcwd(), 'results')
     experiment_folder = os.path.join(results_folder, experiment_name)
     if not os.path.exists(experiment_folder):
         os.makedirs(experiment_folder)
 
-    # Data collection
+    # Data collection - Simulations
     results = {}
     for arg in args:
         version,GA_dict = arg
@@ -105,6 +114,7 @@ def experiment(experiment_name,pop_params,N,stats_test, *args):
             for gen,value in enumerate(run):
                 rows.append({'version': version, 'run': run_index + 1, 'generation': gen + 1, 'value': value})
     results_df = pd.DataFrame(rows)
+
     # Store the results in a csv file
     results_df.to_csv(os.path.join(experiment_folder, f'{experiment_name}.csv'), index=False)
     # Plot the results
