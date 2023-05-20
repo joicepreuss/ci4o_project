@@ -8,6 +8,7 @@ from copy import deepcopy
 from charles.selection import fps, tournament_sel
 from charles.mutation import swap_mutation, invertion_mutation
 from charles.crossover import cycle_xo, pmx
+from experiments import experiment
 
 def flatten(representation):
     # flatten the representation for vrp [[4,2,3], [4], [4,1,5,0]] -> [2,3,1,5,0], (4, [3,1,4])
@@ -71,35 +72,77 @@ Individual.custom_representation = custom_representation
 max_cars = 5
 cities = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16]
 initial_city = 3
+gens = 200
 
-pop = Population(
-    size=100,
-    sol_size=None,
-    replacement=None,
-    valid_set=None,
-    custom_representation=True,
-    custom_representation_kwargs = {
-        'cities': cities, 
-        'initial_city': initial_city, 
+# Experiments
+
+pop_dict = {
+    'optim' : 'min',
+    'size':100,
+    'sol_size':None,
+    'replacement':None,
+    'valid_set':None,
+    'custom_representation':True,
+    'custom_representation_kwargs' : {
+        'cities': cities,
+        'initial_city': initial_city,
         'max_num_vehicles': max_cars
-    },
-    optim="min")
+    }
+}
 
-pop.evolve(
-    gens=200, 
-    select=tournament_sel, 
-    crossover=pmx, 
-    xo_prob=0.95, 
-    mutate=invertion_mutation, 
-    mut_prob=0.4,
-    elitism=True,
-    flatten=flatten,
-    unflatten=unflatten
-    )
+model_1_dict = {
+    'gens':gens,
+    'select':tournament_sel,
+    'crossover':pmx,
+    'xo_prob':0.95,
+    'mutate':invertion_mutation,
+    'mut_prob':0.4,
+    'elitism':True,
+    'flatten':flatten,
+    'unflatten':unflatten
+}
 
-# pop = Population(
-#     representation = get_representation(3, [i for i in range(len(distance_matrix[0]))], 0),
-#     optim="min")
-#
-#hill_climb(pop)
-#sim_annealing(pop)
+model_2_dict = {
+    'gens':gens,
+    'select':tournament_sel,
+    'crossover':cycle_xo,
+    'xo_prob':0.95,
+    'mutate':invertion_mutation,
+    'mut_prob':0.4,
+    'elitism':True,
+    'flatten':flatten,
+    'unflatten':unflatten
+}
+
+model_3_dict = {
+    'gens':gens,
+    'select':tournament_sel,
+    'crossover':cycle_xo,
+    'xo_prob':0.95,
+    'mutate':swap_mutation,
+    'mut_prob':0.4,
+    'elitism':True,
+    'flatten':flatten,
+    'unflatten':unflatten
+}
+
+model_4_dict = {
+    'gens':gens,
+    'select':tournament_sel,
+    'crossover':pmx,
+    'xo_prob':0.95,
+    'mutate':swap_mutation,
+    'mut_prob':0.4,
+    'elitism':True,
+    'flatten':flatten,
+    'unflatten':unflatten
+}
+
+experiment('teste123',
+           pop_dict,
+           30,
+           'parametric',
+           ('GA_tour_invmut_pmx_0.95xo_0.4mut',model_1_dict),
+           ('GA_tour_invmut_cyclexo_0.95xo_0.4mut',model_2_dict),
+           ('GA_tour_swapmut_cyclexo_0.95xo_0.4mut',model_3_dict),
+           ('GA_tour_swapmut_pmx_0.95xo_0.4mut',model_4_dict))

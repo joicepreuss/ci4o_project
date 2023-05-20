@@ -1,3 +1,4 @@
+import os
 from charles.charles import Population, Individual
 import numpy as np
 import pandas as pd
@@ -68,7 +69,7 @@ def perform_statistical_test(df, test_type, level, column='value'):
         return ax_
 
 
-def experiment(pop_params,N,stats_test, *args):
+def experiment(experiment_name,pop_params,N,stats_test, *args):
     """
 
     Args:
@@ -78,6 +79,11 @@ def experiment(pop_params,N,stats_test, *args):
     Returns:
 
     """
+    # Create a folder for the experiment in the results folder
+    results_folder = os.path.join(os.getcwd(), 'results')
+    experiment_folder = os.path.join(results_folder, experiment_name)
+    if not os.path.exists(experiment_folder):
+        os.makedirs(experiment_folder)
 
     # Data collection
     results = {}
@@ -99,7 +105,8 @@ def experiment(pop_params,N,stats_test, *args):
             for gen,value in enumerate(run):
                 rows.append({'version': version, 'run': run_index + 1, 'generation': gen + 1, 'value': value})
     results_df = pd.DataFrame(rows)
-    print(results_df)
+    # Store the results in a csv file
+    results_df.to_csv(os.path.join(experiment_folder, f'{experiment_name}.csv'), index=False)
     # Plot the results
     f,ax = plt.subplots(2,1,figsize=(10,10))
     sns.set_theme(style="darkgrid")
@@ -110,6 +117,8 @@ def experiment(pop_params,N,stats_test, *args):
     # Perform statistical test
     last_gen_df = results_df[results_df['generation'] == results_df['generation'].max()]
     ax[1] = perform_statistical_test(last_gen_df, test_type=stats_test, level='version')
+    # Save the figure
+    f.savefig(os.path.join(experiment_folder, f'{experiment_name}.png'))
     plt.show()
 
 
