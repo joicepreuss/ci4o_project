@@ -56,8 +56,39 @@ def invertion_mutation(individual):
     return individual
 
 
-if __name__ == '__main__':
-    test = [1, 2, 3, 4, 5, 6]
-    # test = binary_mutation(test)
-    test = swap_mutation(test)
+def mutate_structure(structure):
+    """
+    Mutates the structure of the representation of the individual by randomly 
+    changing the number of elements of the representation.
 
+
+    Args:
+    --
+        structure (list): A list with the structure of the representation.
+
+    Returns:
+    --
+        new_structure (list): A list with the initial city and new structure of 
+        the representation.
+    """
+
+    structure_path = structure[1]
+
+    # We add here plus 1, because each car always visits the initial city.
+    max_value = sum(structure_path) - len(structure_path) + 1
+
+    new_structure_path = [0] * len(structure_path)
+    for element in range(len(structure_path)):
+        # Creates for each element expect the last one a random number between 1 and max_value.
+        # Reduces the max_value by the number of elements left to be created.
+        if element < len(new_structure_path) - 1:
+            new_structure_path[element] = randint(1, max_value)
+            max_value = sum(structure_path) - sum(new_structure_path) - (
+                len(structure_path) - (element + 1) - 1)
+        else:
+            # The last element is the subtraction of the sum of the other elements from the 
+            # total number of cities.
+            new_structure_path[element] = sum(structure_path) - sum(new_structure_path)
+    new_structure = [structure[0], new_structure_path]
+
+    return new_structure

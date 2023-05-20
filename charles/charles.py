@@ -68,11 +68,30 @@ class Population:
                 )
             )
 
-    def evolve(self, gens, select, mutate, crossover, xo_prob, mut_prob, elitism, flatten=None, unflatten=None):
-        """Evolve the population
-        Args:
-            func (function): A function that takes a population and returns a new population
+    def evolve(self, gens, select, mutate, crossover, xo_prob, mut_prob, elitism, flatten=None, 
+               unflatten=None, mutate_structure=None):
         """
+        Evolve the population for a number of generations applying the genetic operators.
+
+        Args:
+        --
+            gens (int): The number of generations to evolve.
+            select (function): The selection function to be used.
+            crossover (function): The crossover function to be used.
+            xo_prob (float): The probability of crossover.
+            mutate (function): The mutation function to be used.
+            mut_prob (float): The probability of mutation.
+            elitism (bool): If True the best individual will be kept safe from generation to generation.
+            flatten (function): The function to flatten the representation of the individual.
+            unflatten (function): The function to unflatten the representation of the individual.
+            mutate_structure (function): The function to mutate the structure of the representation 
+            of the individual.
+
+        Returns:
+        --
+            best_individuals (list): A list with the best individuals from each generation.
+        """
+        
         best_individuals = []
         for i in range(gens):
             new_pop = []
@@ -87,7 +106,7 @@ class Population:
                 parent1, parent2 = select(self), select(self)
 
                 # As we have a custom representation we need to flatten the representation
-                # to be able to apply the crossover and mutation operators
+                # to be able to apply the crossover and mutation operators.
                 if self.is_custom_representation:
                     parent1, structure1 = flatten(parent1)
                     parent2, structure2 = flatten(parent2)
@@ -104,15 +123,29 @@ class Population:
                 if random() < mut_prob:
                     offspring2 = mutate(offspring2)
 
+                # Mutation of the structure of the representation.
+                if random() < mut_prob:
+                    structure1 = mutate_structure(structure1)
+                if random() < mut_prob:
+                    structure2 = mutate_structure(structure2)
+
                 # As we applied the mutation and crossover operators to the flattened representation
-                # we need to unflatten the representation to be able to create the new individuals
+                # we need to unflatten the representation to be able to create the new individuals.
                 if self.is_custom_representation:
                     offspring1 = unflatten(offspring1, structure1)
                     offspring2 = unflatten(offspring2, structure2)
 
-                new_pop.append(Individual(representation=offspring1, custom_representation=self.is_custom_representation, custom_representation_kwargs=self.custom_representation_kwargs))
+                new_pop.append(
+                    Individual(representation=offspring1, 
+                               custom_representation=self.is_custom_representation, 
+                               custom_representation_kwargs=self.custom_representation_kwargs)
+                               )
                 if len(new_pop) < self.size:
-                    new_pop.append(Individual(representation=offspring2, custom_representation=self.is_custom_representation, custom_representation_kwargs=self.custom_representation_kwargs))
+                    new_pop.append(
+                        Individual(representation=offspring2, 
+                                   custom_representation=self.is_custom_representation, 
+                                   custom_representation_kwargs=self.custom_representation_kwargs)
+                                   )
 
             if elitism:
                 if self.optim == 'max':
@@ -129,6 +162,7 @@ class Population:
             elif self.optim == 'min':
                 print(f'Best individual: {min(self, key=attrgetter("fitness"))}')
                 best_individuals.append(min(self, key=attrgetter("fitness")))
+                
         return best_individuals
 
     def __len__(self):

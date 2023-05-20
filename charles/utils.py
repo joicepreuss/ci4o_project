@@ -1,43 +1,50 @@
-import seaborn as sns
-import matplotlib.pyplot as plt
-from copy import deepcopy
+import numpy as np
 
+def flatten(representation):
+    """
+    Function to flatten the representation to be able to apply the crossover and mutation operators.
+    Args:
+    --
+        representation (Individual): An individual from charles.py
 
-def fitness(number):
-    #return "{0:04b}".format(number).count("1")
-    return number**2
+    Returns:
+    --
+        flat_representation (list): A list with the representation flattened.
+        flat_structure (list): A list with the structure of the representation. 
+        First element is the initial city and the second element is a list with the number 
+        of cities to be visited by each vehicle. 
+    """
 
+    inital_city = representation[0][0]
+    structure_representation = [len(car) for car in representation]
+    flat_representation = [city for car in representation for idx, city in enumerate(car) if idx != 0]
+    flat_structure = [inital_city, structure_representation]
 
-# plotting the fitness landscape of the int_bin problem
-#a = sns.lineplot(data=[fitness(i) for i in range(0, 16)])
-#a.set_xticks(range(0, 16))
-#plt.show()
+    return flat_representation, flat_structure
 
+def unflatten(flat_representation, structure):
+    """
+    Function to unflatten the representation to be able to create the new individuals.
+    Args:
+    --
+        flat_representation (list): A list with the representation flattened.
+        structure (list): A list with the structure of the representation.
+        
+    Returns:
+    --
+    representation (list): A list with the representation unflattened.
+    """
 
-# new neighbourhood structure
-rep = [0, 0, 0, 0]
-n = [deepcopy(rep) for i in range(len(rep))]
+    representation = []
+    count = 0
+    for car in structure[1]:
+        representation.append([structure[0]] + flat_representation[count:count+(car-1)])
+        count += car-1
+    
+    return representation
 
-for count, i in enumerate(n):
-    if i[count] == 1:
-        i[count] = 0
-    elif i[count] == 0:
-        i[count] = 1
-
-#print(n)
-#print(rep)
-
-
-# simulated annealing parameters
-def plot_c(c, alpha, threshold):
-    c_list = [c]
-    while c > threshold:
-        c = c * alpha
-        c_list.append(c)
-    plt.plot(c_list)
-    plt.show()
-
-
-plot_c(10, 0.95, 0.05)
-
-
+def generate_random_distance_matrix(n):
+    matrix = np.random.randint(1, 1001, size=(n, n))
+    symmetric_matrix = (matrix + matrix.T) / 2
+    np.fill_diagonal(symmetric_matrix, 0)
+    return symmetric_matrix.tolist()

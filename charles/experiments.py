@@ -122,5 +122,3 @@ def experiment(experiment_name,pop_params,N,stats_test, *args):
     plt.show()
 
 
-
-

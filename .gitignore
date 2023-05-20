@@ -129,4 +129,4 @@ dmypy.json
 .pyre/
 
 #removing env
-./ci40-env
+./ci4o-env

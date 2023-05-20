@@ -8,9 +8,7 @@ Welcome! This is a repository for CI4O project !
 | 20220594 | Jaime Kuei | 
 | 20220595 | Maxwell Marcos | 
 | 20220630 | Jannik Kickler | 
-|  | Bianca Victor |
-=======
-
+| 20221036 | Bianca Victor |
 
 ## Contents
 This repository is organanized as follows:
@@ -21,7 +19,7 @@ This repository is organanized as follows:
 python3 -m venv .ci4o-env
 source .ci40-env/bin/activate
 pip install --upgrade pip
-pip install requirements.txt
+pip install -r requirements.txt
  ```
 
 ## What is our optimization problem? 
