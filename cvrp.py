@@ -205,6 +205,7 @@ ga_conf_4 = {
 }
 
 experiment(
+    'cvrp_test_mutation_probability_experiment',
     pop_params,
     N,
     stats_test,

@@ -108,7 +108,7 @@ initial_city = 4
 #     )
 
 pop_params = {
-    'size': 100,
+    'size': 25,
     'sol_size': None,
     'replacement': None,
     'valid_set': None,
@@ -120,11 +120,12 @@ pop_params = {
     },
     'optim': "min"
 }
-N = 50
-stats_test = 'non-parametric'
+N = 25
+stats_test = 'parametric'
+gens = 10
 
 ga_conf_1 = {
-    'gens': 100,
+    'gens': gens,
     'select': tournament_sel,
     'crossover': pmx,
     'xo_prob': 0.95,
@@ -136,7 +137,7 @@ ga_conf_1 = {
     'mutate_structure': mutate_structure
 }
 ga_conf_2 = {
-    'gens': 100,
+    'gens': gens,
     'select': tournament_sel,
     'crossover': pmx,
     'xo_prob': 0.95,
@@ -148,7 +149,7 @@ ga_conf_2 = {
     'mutate_structure': mutate_structure
 }
 ga_conf_3 = {
-    'gens': 100,
+    'gens': gens,
     'select': tournament_sel,
     'crossover': pmx,
     'xo_prob': 0.95,
@@ -160,7 +161,7 @@ ga_conf_3 = {
     'mutate_structure': mutate_structure
 }
 ga_conf_4 = {
-    'gens': 100,
+    'gens': gens,
     'select': tournament_sel,
     'crossover': pmx,
     'xo_prob': 0.5,
@@ -173,6 +174,7 @@ ga_conf_4 = {
 }
 
 experiment(
+    'vrp_test_mutation_probability_experiment',
     pop_params,
     N,
     stats_test,

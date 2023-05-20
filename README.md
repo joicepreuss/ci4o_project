@@ -104,3 +104,23 @@ For crossover:
 For mutation:
 - swap_mutation
 - invertion_mutation
+
+## Experiments
+
+In the experiments folder, it's possible to see the experiments that we did for the project. Each experiment is represented in a folder with the name of the experiment, and the results as a csv file and the 
+plot of the statistical results as a png file.
+
+### Statistical evaluation
+
+The experiment consists in running the GA algorithm N times for each configuration and then storing the best fitness for each generation. 
+This distributions are then used to plot the results into a line plot, comparing all the configurations. The bands for each plot represents
+the 95% confidence interval for the mean of the distribution.
+
+The last generation of each configuration is then used to perform a statistical test to evaluate the final performance of each configuration.
+The statistical procedure consists on performing an ANOVA test (also have options to perform non-parametric test such as Kruskal-wallis). Since we can have more than two configurations to be compared, an F-test is
+more appropriate than multiple t-tests. The ANOVA test outputs if there are any statistically significant difference in the means of all the configurations tested, but does not answer which one
+is the different or how the multiple configurations are different between each other. In order to 
+evaluate the pair-wise statistical tests, we can use a Tukey post-hoc test. This kind of test already corrects the pvalues due to the multiple-comparison problem (or family-wise erros) according to 
+a predefined method (bonferroni, holchberg,etc...).
+
+This post-hoc tests plots the pvalues originated from the comparisons between each pair-wise configuration comparison.
