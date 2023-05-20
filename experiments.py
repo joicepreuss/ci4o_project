@@ -118,7 +118,7 @@ def experiment(experiment_name,pop_params,N,stats_test, *args):
     # Store the results in a csv file
     results_df.to_csv(os.path.join(experiment_folder, f'{experiment_name}.csv'), index=False)
     # Plot the results
-    f,ax = plt.subplots(2,1,figsize=(10,10))
+    f,ax = plt.subplots(2,1,figsize=(10,15))
     sns.set_theme(style="darkgrid")
     sns.lineplot(data=results_df, x="generation", y="value", hue="version",ax= ax[0])
     ax[0].set_title("Fitness evolution of all evaluated models")
