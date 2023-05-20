@@ -68,7 +68,7 @@ def perform_statistical_test(df, test_type, level, column='value'):
         return ax_
 
 
-def experiment(pop_params,N,stats_test, *args):
+def experiment(pop_params,N ,stats_test, *args):
     """
 
     Args:
@@ -111,7 +111,5 @@ def experiment(pop_params,N,stats_test, *args):
     last_gen_df = results_df[results_df['generation'] == results_df['generation'].max()]
     ax[1] = perform_statistical_test(last_gen_df, test_type=stats_test, level='version')
     plt.show()
-
-
 
 
