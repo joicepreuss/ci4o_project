@@ -56,6 +56,28 @@ def invertion_mutation(individual):
     return individual
 
 
+def mutate_structure(structure):
+    """
+    Mutate the structure of the representation
+    """
+    #[[4,2,3], [4], [4,1,5,0]] -> [2,3,1,5,0], [4, [3,1,4]]
+    #[[4,2,3], [4], [4,1,5,0]] -> [2,3,1,5,0], [4, [3,1,4,2]]
+
+    structure_path = structure[1]
+    # Max value of the structure. It is the sum of the elements minus the number of elements plus 1.
+    max_value = sum(structure_path) - len(structure_path) + 1
+    # new structure path which not exceed the max value and not less than 1 and random numbers of elements
+    new_structure_path = [0] * len(structure_path)
+    for element in range(len(structure_path)):
+        if element < len(new_structure_path)-1:
+            new_structure_path[element] = randint(1, max_value)
+            max_value = sum(structure_path) - sum(new_structure_path) - (len(structure_path) - (element + 1) - 1)
+        else:
+            new_structure_path[element] = sum(structure_path) - sum(new_structure_path)
+    
+    return [structure[0], new_structure_path]
+
+
 if __name__ == '__main__':
     test = [1, 2, 3, 4, 5, 6]
     # test = binary_mutation(test)

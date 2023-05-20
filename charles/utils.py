@@ -2,42 +2,19 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 from copy import deepcopy
 
+def flatten(representation):
+    # flatten the representation for vrp [[4,2,3], [4], [4,1,5,0]] -> [2,3,1,5,0], (4, [3,1,4])
+    inital_city = representation[0][0]
+    structure_representation = [len(car) for car in representation]
+    flat_representation = [city for car in representation for idx, city in enumerate(car) if idx != 0]
+    return flat_representation, [inital_city, structure_representation]
 
-def fitness(number):
-    #return "{0:04b}".format(number).count("1")
-    return number**2
-
-
-# plotting the fitness landscape of the int_bin problem
-#a = sns.lineplot(data=[fitness(i) for i in range(0, 16)])
-#a.set_xticks(range(0, 16))
-#plt.show()
-
-
-# new neighbourhood structure
-rep = [0, 0, 0, 0]
-n = [deepcopy(rep) for i in range(len(rep))]
-
-for count, i in enumerate(n):
-    if i[count] == 1:
-        i[count] = 0
-    elif i[count] == 0:
-        i[count] = 1
-
-#print(n)
-#print(rep)
-
-
-# simulated annealing parameters
-def plot_c(c, alpha, threshold):
-    c_list = [c]
-    while c > threshold:
-        c = c * alpha
-        c_list.append(c)
-    plt.plot(c_list)
-    plt.show()
-
-
-plot_c(10, 0.95, 0.05)
-
+def unflatten(flat_representation, structure):
+    # unflatten the representation for vrp [2,3,1,5,0], [4], [3,1,4]] -> [[4,2,3], [4], [4,1,5,0]]
+    representation = []
+    count = 0
+    for car in structure[1]:
+        representation.append([structure[0]] + flat_representation[count:count+(car-1)])
+        count += car-1
+    return representation
 
