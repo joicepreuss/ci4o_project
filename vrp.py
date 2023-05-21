@@ -80,33 +80,6 @@ max_cars = 5
 cities = [i for i in range(len(distance_matrix))]
 initial_city = 4
 
-# pop = Population(
-#     size=100,
-#     sol_size=None,
-#     replacement=None,
-#     valid_set=None,
-#     custom_representation=True,
-#     custom_representation_kwargs = {
-#         'cities': cities, 
-#         'initial_city': initial_city, 
-#         'max_num_vehicles': max_cars
-#     },
-#     optim="min"
-#     )
-
-# pop.evolve(
-#     gens=200, 
-#     select=tournament_sel, 
-#     crossover=pmx, 
-#     xo_prob=0.95, 
-#     mutate=invertion_mutation, 
-#     mut_prob=0.4,
-#     elitism=False,
-#     flatten=flatten,
-#     unflatten=unflatten,
-#     mutate_structure=mutate_structure
-#     )
-
 pop_params = {
     'size': 25,
     'sol_size': None,
@@ -126,7 +99,7 @@ gens = 10
 
 ga_conf_1 = {
     'gens': gens,
-    'select': tournament_sel,
+    'select': fps,
     'crossover': pmx,
     'xo_prob': 0.95,
     'mutate': invertion_mutation,

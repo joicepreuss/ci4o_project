@@ -44,7 +44,20 @@ def unflatten(flat_representation, structure):
     return representation
 
 def generate_random_distance_matrix(n):
+    """
+    Function to generate a random distance matrix.
+    
+    Args:
+    --
+        n (int): The size of the distance matrix.
+
+    Returns:
+    --
+        symmetric_matrix (list): A list with the distance matrix.
+    """
+
     matrix = np.random.randint(1, 1001, size=(n, n))
     symmetric_matrix = (matrix + matrix.T) / 2
     np.fill_diagonal(symmetric_matrix, 0)
+
     return symmetric_matrix.tolist()
