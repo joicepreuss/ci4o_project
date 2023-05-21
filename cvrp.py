@@ -2,7 +2,6 @@
 
 import math
 import yaml
-from yaml.loader import SafeLoader
 from random import choice, sample, randint
 
 from charles.charles import Population, Individual
@@ -121,29 +120,6 @@ def calculate_demand(max_cars, car_capacity, cities):
 
     return demand
 
-def generate_eexperiments(experiments_configuration, experimentation_name, mapping_dict):
-    pop_params = update_dictionary(
-        experiments_configuration[experimentation_name]['population_parameters'],
-        mapping_dict
-    )
-
-    for ga_experiment in experiments_configuration[experimentation_name]['ga_parameters']:
-        experiment_name = f'{experimentation_name}_{ga_experiment}'
-        
-        ga_experiments = []
-        for variant in experiments_configuration[experimentation_name]['ga_parameters'][ga_experiment]:
-            config = experiments_configuration[experimentation_name]['ga_parameters'][ga_experiment][variant]
-            ga_experiments.append(((ga_experiment+'_'+variant), update_dictionary(config, mapping_dict)))
-
-        print('Generating Experiment: ', experiment_name)
-        experiment(
-            experiment_name,
-            pop_params,
-            N,
-            stats_test,
-            *ga_experiments
-        )
-
 # Monkey patching.
 Individual.get_fitness = get_fitness
 Individual.custom_representation = custom_representation
@@ -151,17 +127,17 @@ Individual.custom_representation = custom_representation
 
 # reading configuration experiment file
 with open('experiments_configuration.yaml') as f:
-    experiments_configuration = yaml.load(f, Loader=SafeLoader)
+    experiments_configuration = yaml.load(f, Loader=yaml.loader.SafeLoader)
 
 
 # Experiment Parameters
 experimentation_name = 'cvrp_experiments'
 version = 'v1'
-N = 5 # number of times to run each experiment
+N = 50 # number of times to run each experiment
 stats_test = 'parametric' #statistical test to use
 
 # Parameters of the CVRP Problem
-nb_cities = 50
+nb_cities = 250
 distance_matrix = generate_random_distance_matrix(nb_cities)
 cities = [i for i in range(len(distance_matrix))]
 initial_city = 4
@@ -171,7 +147,8 @@ higehst_demand = math.floor((max_cars * car_capacity) / len(cities))
 demand = [randint(1, higehst_demand) for city in range(len(cities)) if city != initial_city]
 
 # Parameter for GA experiments
-gens = 10
+gens = 100
+pop_size = 100
 
 mapping_dict = {
     'cities': cities,
@@ -181,6 +158,7 @@ mapping_dict = {
     'demand': demand,
     'stats_test': stats_test,
     'N': N,
+    'pop_size': pop_size,
     'tournament_sel': tournament_sel,
     'fps': fps,
     'cycle_xo': cycle_xo,

@@ -1,6 +1,6 @@
 vrp_experiments:
   population_parameters: 
-    size: 100
+    size: pop_size
     sol_size: null
     replacement: null
     valid_set: null
@@ -130,7 +130,7 @@ vrp_experiments:
 
 cvrp_experiments:
   population_parameters: 
-    size: 100
+    size: pop_size
     sol_size: null
     replacement: null
     valid_set: null
