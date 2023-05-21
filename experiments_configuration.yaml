@@ -1,0 +1,261 @@
+vrp_experiments:
+  population_parameters: 
+    size: pop_size
+    sol_size: null
+    replacement: null
+    valid_set: null
+    custom_representation: True
+    custom_representation_kwargs: 
+      cities: cities
+      initial_city: initial_city
+      max_num_vehicles: max_cars
+    optim: min
+  N: 'N'
+  stats_test: stats_test
+  ga_parameters: 
+    mutation:
+      tournament_selection: 
+        gens: gens
+        select: tournament_sel
+        crossover: pmx
+        xo_prob: 0.95
+        mutate: invertion_mutation
+        mut_prob: 0.1
+        elitism: True
+        flatten: flatten
+        unflatten: unflatten
+        mutate_structure: mutate_structure
+      fps: 
+        gens: gens
+        select: tournament_sel
+        crossover: pmx
+        xo_prob: 0.95
+        mutate: invertion_mutation
+        mut_prob: 0.1
+        elitism: True
+        flatten: flatten
+        unflatten: unflatten
+        mutate_structure: mutate_structure
+    crossover:
+      cycle_xo: 
+        gens: gens
+        select: tournament_sel
+        crossover: pmx
+        xo_prob: 0.95
+        mutate: invertion_mutation
+        mut_prob: 0.1
+        elitism: True
+        flatten: flatten
+        unflatten: unflatten
+        mutate_structure: mutate_structure
+      pmx: 
+        gens: gens
+        select: tournament_sel
+        crossover: cycle_xo
+        xo_prob: 0.95
+        mutate: invertion_mutation
+        mut_prob: 0.1
+        elitism: True
+        flatten: flatten
+        unflatten: unflatten
+        mutate_structure: mutate_structure
+    crossover_prob:
+      _0_95: 
+        gens: gens
+        select: tournament_sel
+        crossover: pmx
+        xo_prob: 0.95
+        mutate: invertion_mutation
+        mut_prob: 0.1
+        elitism: True
+        flatten: flatten
+        unflatten: unflatten
+        mutate_structure: mutate_structure
+      _0_5: 
+        gens: gens
+        select: tournament_sel
+        crossover: pmx
+        xo_prob: 0.5
+        mutate: invertion_mutation
+        mut_prob: 0.1
+        elitism: True
+        flatten: flatten
+        unflatten: unflatten
+        mutate_structure: mutate_structure
+      _0_1: 
+        gens: gens
+        select: tournament_sel
+        crossover: pmx
+        xo_prob: 0.1
+        mutate: invertion_mutation
+        mut_prob: 0.1
+        elitism: True
+        flatten: flatten
+        unflatten: unflatten
+        mutate_structure: mutate_structure
+    mutation_prob:
+      _0_95: 
+        gens: gens
+        select: tournament_sel
+        crossover: pmx
+        xo_prob: 0.95
+        mutate: invertion_mutation
+        mut_prob: 0.1
+        elitism: True
+        flatten: flatten
+        unflatten: unflatten
+        mutate_structure: mutate_structure
+      _0_5: 
+        gens: gens
+        select: tournament_sel
+        crossover: pmx
+        xo_prob: 0.95
+        mutate: invertion_mutation
+        mut_prob: 0.5
+        elitism: True
+        flatten: flatten
+        unflatten: unflatten
+        mutate_structure: mutate_structure
+      _0_1: 
+        gens: gens
+        select: tournament_sel
+        crossover: pmx
+        xo_prob: 0.95
+        mutate: invertion_mutation
+        mut_prob: 0.95
+        elitism: True
+        flatten: flatten
+        unflatten: unflatten
+        mutate_structure: mutate_structure
+
+cvrp_experiments:
+  population_parameters: 
+    size: pop_size
+    sol_size: null
+    replacement: null
+    valid_set: null
+    custom_representation: True
+    custom_representation_kwargs: 
+      cities: cities
+      initial_city: initial_city
+      max_num_vehicles: max_cars
+      car_capacity: car_capacity
+      demand: demand
+    optim: min
+  N: 'N'
+  stats_test: stats_test
+  ga_parameters: 
+    mutation: 
+      tournament_selection: 
+        gens: gens
+        select: tournament_sel
+        crossover: pmx
+        xo_prob: 0.95
+        mutate: invertion_mutation
+        mut_prob: 0.1
+        elitism: True
+        flatten: flatten
+        unflatten: unflatten
+        mutate_structure: mutate_structure
+      fps: 
+        gens: gens
+        select: tournament_sel
+        crossover: pmx
+        xo_prob: 0.95
+        mutate: invertion_mutation
+        mut_prob: 0.1
+        elitism: True
+        flatten: flatten
+        unflatten: unflatten
+        mutate_structure: mutate_structure
+    crossover:
+      cycle_xo: 
+        gens: gens
+        select: tournament_sel
+        crossover: pmx
+        xo_prob: 0.95
+        mutate: invertion_mutation
+        mut_prob: 0.1
+        elitism: True
+        flatten: flatten
+        unflatten: unflatten
+        mutate_structure: mutate_structure
+      pmx: 
+        gens: gens
+        select: tournament_sel
+        crossover: cycle_xo
+        xo_prob: 0.95
+        mutate: invertion_mutation
+        mut_prob: 0.1
+        elitism: True
+        flatten: flatten
+        unflatten: unflatten
+        mutate_structure: mutate_structure
+    crossover_prob:
+      _0_95: 
+        gens: gens
+        select: tournament_sel
+        crossover: pmx
+        xo_prob: 0.95
+        mutate: invertion_mutation
+        mut_prob: 0.1
+        elitism: True
+        flatten: flatten
+        unflatten: unflatten
+        mutate_structure: mutate_structure
+      _0_5: 
+        gens: gens
+        select: tournament_sel
+        crossover: pmx
+        xo_prob: 0.5
+        mutate: invertion_mutation
+        mut_prob: 0.1
+        elitism: True
+        flatten: flatten
+        unflatten: unflatten
+        mutate_structure: mutate_structure
+      _0_1: 
+        gens: gens
+        select: tournament_sel
+        crossover: pmx
+        xo_prob: 0.1
+        mutate: invertion_mutation
+        mut_prob: 0.1
+        elitism: True
+        flatten: flatten
+        unflatten: unflatten
+        mutate_structure: mutate_structure
+    mutation_prob:
+      _0_95: 
+        gens: gens
+        select: tournament_sel
+        crossover: pmx
+        xo_prob: 0.95
+        mutate: invertion_mutation
+        mut_prob: 0.1
+        elitism: True
+        flatten: flatten
+        unflatten: unflatten
+        mutate_structure: mutate_structure
+      _0_5: 
+        gens: gens
+        select: tournament_sel
+        crossover: pmx
+        xo_prob: 0.95
+        mutate: invertion_mutation
+        mut_prob: 0.5
+        elitism: True
+        flatten: flatten
+        unflatten: unflatten
+        mutate_structure: mutate_structure
+      _0_1: 
+        gens: gens
+        select: tournament_sel
+        crossover: pmx
+        xo_prob: 0.95
+        mutate: invertion_mutation
+        mut_prob: 0.95
+        elitism: True
+        flatten: flatten
+        unflatten: unflatten
+        mutate_structure: mutate_structure
