@@ -8,6 +8,45 @@ from scikit_posthocs import posthoc_dunn, posthoc_tukey
 import seaborn as sns
 import matplotlib.pyplot as plt
 
+def update_dictionary(dictionary, mapping_dict):
+    for key, value in dictionary.items():
+        try:
+            dictionary[key] = mapping_dict[value]
+        except:
+            try:
+                for key2, value2 in dictionary[key].items():
+                    try:
+                        dictionary[key][key2] = mapping_dict[value2]
+                    except:
+                        pass
+            except:
+                pass
+    return dictionary
+
+def generate_experiments(experiments_configuration, experimentation_name, version, mapping_dict, N, stats_test, show_figure=False):
+    pop_params = update_dictionary(
+        experiments_configuration[experimentation_name]['population_parameters'],
+        mapping_dict
+    )
+
+    for ga_experiment in experiments_configuration[experimentation_name]['ga_parameters']:
+        experiment_name = f'{experimentation_name}_{version}_{ga_experiment}'
+        
+        ga_experiments = []
+        for variant in experiments_configuration[experimentation_name]['ga_parameters'][ga_experiment]:
+            config = experiments_configuration[experimentation_name]['ga_parameters'][ga_experiment][variant]
+            ga_experiments.append(((ga_experiment+'_'+variant), update_dictionary(config, mapping_dict)))
+
+        print('Generating Experiment: ', experiment_name)
+        experiment(
+            experiment_name,
+            pop_params,
+            N,
+            stats_test,
+            show_figure,
+            *ga_experiments
+        )
+
 def perform_statistical_test(df, test_type, level, column='value'):
     """
     Perform a statistical test on a dataframe with multiple levels
@@ -74,7 +113,7 @@ def perform_statistical_test(df, test_type, level, column='value'):
         return ax_
 
 
-def experiment(experiment_name,pop_params,N,stats_test, *args):
+def experiment(experiment_name,pop_params,N,stats_test,show_figure, *args):
     """
 
     Args:
@@ -129,6 +168,7 @@ def experiment(experiment_name,pop_params,N,stats_test, *args):
     ax[1] = perform_statistical_test(last_gen_df, test_type=stats_test, level='version')
     # Save the figure
     f.savefig(os.path.join(experiment_folder, f'{experiment_name}.png'))
-    plt.show()
+    if show_figure:
+        plt.show()
 
 
