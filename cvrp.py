@@ -164,6 +164,7 @@ mapping_dict = {
     'cycle_xo': cycle_xo,
     'pmx': pmx,
     'invertion_mutation': invertion_mutation,
+    'swap_mutation': swap_mutation,
     'flatten': flatten,
     'unflatten': unflatten,
     'mutate_structure': mutate_structure,
