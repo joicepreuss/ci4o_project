@@ -13,7 +13,7 @@ vrp_experiments:
   N: 'N'
   stats_test: stats_test
   ga_parameters: 
-    mutation:
+    selection:
       tournament_selection: 
         gens: gens
         select: tournament_sel
@@ -27,10 +27,33 @@ vrp_experiments:
         mutate_structure: mutate_structure
       fps: 
         gens: gens
+        select: fps
+        crossover: pmx
+        xo_prob: 0.95
+        mutate: invertion_mutation
+        mut_prob: 0.1
+        elitism: True
+        flatten: flatten
+        unflatten: unflatten
+        mutate_structure: mutate_structure
+    mutation:
+      invertion_mutation: 
+        gens: gens
         select: tournament_sel
         crossover: pmx
         xo_prob: 0.95
         mutate: invertion_mutation
+        mut_prob: 0.1
+        elitism: True
+        flatten: flatten
+        unflatten: unflatten
+        mutate_structure: mutate_structure
+      swap_mutation: 
+        gens: gens
+        select: tournament_sel
+        crossover: pmx
+        xo_prob: 0.95
+        mutate: swap_mutation
         mut_prob: 0.1
         elitism: True
         flatten: flatten
@@ -145,7 +168,7 @@ cvrp_experiments:
   N: 'N'
   stats_test: stats_test
   ga_parameters: 
-    mutation: 
+    selection: 
       tournament_selection: 
         gens: gens
         select: tournament_sel
@@ -159,10 +182,33 @@ cvrp_experiments:
         mutate_structure: mutate_structure
       fps: 
         gens: gens
+        select: fps
+        crossover: pmx
+        xo_prob: 0.95
+        mutate: invertion_mutation
+        mut_prob: 0.1
+        elitism: True
+        flatten: flatten
+        unflatten: unflatten
+        mutate_structure: mutate_structure
+    mutation:
+      invertion_mutation: 
+        gens: gens
         select: tournament_sel
         crossover: pmx
         xo_prob: 0.95
         mutate: invertion_mutation
+        mut_prob: 0.1
+        elitism: True
+        flatten: flatten
+        unflatten: unflatten
+        mutate_structure: mutate_structure
+      swap_mutation: 
+        gens: gens
+        select: tournament_sel
+        crossover: pmx
+        xo_prob: 0.95
+        mutate: swap_mutation
         mut_prob: 0.1
         elitism: True
         flatten: flatten
