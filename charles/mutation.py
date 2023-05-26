@@ -61,7 +61,6 @@ def mutate_structure(structure):
     Mutates the structure of the representation of the individual by randomly 
     changing the number of elements of the representation.
 
-
     Args:
     --
         structure (list): A list with the structure of the representation.
