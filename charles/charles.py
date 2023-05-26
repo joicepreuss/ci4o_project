@@ -124,10 +124,11 @@ class Population:
                     offspring2 = mutate(offspring2)
 
                 # Mutation of the structure of the representation.
-                if random() < mut_prob:
-                    structure1 = mutate_structure(structure1)
-                if random() < mut_prob:
-                    structure2 = mutate_structure(structure2)
+                if mutate_structure:
+                    if random() < mut_prob:
+                        structure1 = mutate_structure(structure1)
+                    if random() < mut_prob:
+                        structure2 = mutate_structure(structure2)
 
                 # As we applied the mutation and crossover operators to the flattened representation
                 # we need to unflatten the representation to be able to create the new individuals.

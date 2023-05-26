@@ -2,7 +2,12 @@ import numpy as np
 
 def flatten(representation):
     """
-    Function to flatten the representation to be able to apply the crossover and mutation operators.
+    Function to flatten the representation to be able to apply the crossover and 
+    mutation operators. It transform a list of lists in a list of cities and 
+    creates another list with the structure of the representation, formed by 
+    first element as the initial city and the second element as a list with the 
+    number of cities to be visited by each vehicle.
+
     Args:
     --
         representation (Individual): An individual from charles.py
@@ -11,8 +16,8 @@ def flatten(representation):
     --
         flat_representation (list): A list with the representation flattened.
         flat_structure (list): A list with the structure of the representation. 
-        First element is the initial city and the second element is a list with the number 
-        of cities to be visited by each vehicle. 
+        First element is the initial city and the second element is a list with 
+        the number of cities to be visited by each vehicle. 
     """
 
     inital_city = representation[0][0]
