@@ -124,3 +124,42 @@ evaluate the pair-wise statistical tests, we can use a Tukey post-hoc test. This
 a predefined method (bonferroni, holchberg,etc...).
 
 This post-hoc tests plots the pvalues originated from the comparisons between each pair-wise configuration comparison.
+
+## Vehicle Routing Problem
+
+### Representation and Fitness function
+
+As representation of the problem, each individual is created as a list of lists, in which each list represents a vehicle and the elements represent the cities to be visited by that vehicle. The first element of each vehicle list is the initial city.
+
+Example: [[2,3],[2],[2,1,4]]
+
+                            where:	vehicle 1 start in city 2 and goes to city 3
+
+                                    vehicle 2 start in city 2 and stays
+
+                                    vehicle 3 start in city 2 and goes to city 1 and 4
+                                    
+The TSP fitness function from class is used and modified as the fitness function, returning the total fitness of each individual by summing the single vehicle fitnesses. 
+As previously mentioned, now a more detailed explanation of the functions flatten() and unflatten() is provided due to their significance. The function flatten() has two outputs, namely the flat_representation and the flat_structure. The flat_representation is a list that contains all the cities visited by all cars. The order of the cities in the list corresponds to the order in which the cars visited them. For instance, the first element of the list represents the first city visited by the first vehicle, the second element the second city visited by the first vehicle, followed by subsequent cities visited by other vehicles. On the other hand, the flat_structure is a list, where the first element represents the initial city in the representation, while the second element is a sublist that indicates the number of cities a particular vehicle is traveling. For example, in the provided example, vehicle 1 visits cities 2 and 3, resulting in a total of 2 cities that need to be passed.
+
+Example: 
+
+flatten([[2,3],[2],[2,1,4]]) → flat_representation [3,1,4]; flat_structure [[2, [2,1,3]]
+
+The reason for introducing the flatten() function is that performing mutation and applying crossover operations becomes easier with the flattened form of the representation. Additionally, we employ the mutate_structure() function on the flat_structure to introduce greater variation among the newly created individuals. Finally, unflatten() reconstructs the modified representation by combining the altered flat_representation with the mutated structure.
+
+## Capacity Constraint Vehicle Routing Problem
+
+### Representation and Fitness function
+
+In order to consider the capacity constraint, the representation of each individual is modified. Instead of a single value for each city, a tuple format (city, demand) is used, where demand represents the amount of capacity consumed by the vehicle. The initial city in this problem has a demand of 0. Each vehicle is assigned a predefined capacity restriction which should not be surpassed. However, if a vehicle exceeds its capacity through random selection, a penalty of 100,000 is added to the fitness of the individual. This penalty ensures that the individual will not survive during the generation of offspring. Otherwise the calculation of total distance is similar to VRP.
+
+Example: [[(2,0),(3,1)],[(2,0)],[(2,0),(1,2),(4,3)]], 
+
+                        where:  vehicle 1 start in city 2 with 0 load and goes to city 3 that has 1 load
+                                
+                                vehicle 2 start in city 2 with 0 load and stays
+
+                                vehicle 3 start in city 2 with 0 load, goes to city 1 with 2 load  and 4 with 3 load
+
+For the CVRP representation the functions flatten() and unflatten() work the same as described in the chapter VRP.
