@@ -1,35 +1,37 @@
-import pandas as pd
 import os
+import pandas as pd
+import scipy.stats as stats
+import matplotlib.pyplot as plt
 
-# get name of folders inside the folder results
-folders = [experiment for experiment in os.listdir('results') if 'vrp_experiments' in experiment]
-print('Folders: ', folders)
+def process_csv_file(file_path):
+    df = pd.read_csv(file_path)
+    df_100th_gen = df[df['generation'] == 100]
+    grouped_by_version = df_100th_gen.groupby('version')['value']
+    
+    avg_fitness_by_version = grouped_by_version.mean()
+    std_dev_by_version = grouped_by_version.std()
+    conf_int_by_version = grouped_by_version.apply(lambda x: stats.t.interval(0.95, len(x)-1, loc=x.mean(), scale=stats.sem(x)))
+    
+    return avg_fitness_by_version, std_dev_by_version, conf_int_by_version
 
-name_problems = [experiment.split('_')[0] for experiment in folders]
-name_experiments = [experiment.split('v1_')[-1] for experiment in folders]
+def main():
+    results_folder = 'results'
+    output_data = []
 
-print(name_problems)
-print(name_experiments)
+    for folder_name in os.listdir(results_folder):
+        if folder_name.startswith('cvrp_experiments') or folder_name.startswith('vrp_experiments'):
+            folder_path = os.path.join(results_folder, folder_name)
+            for file_name in os.listdir(folder_path):
+                if file_name.endswith('.csv'):
+                    file_path = os.path.join(folder_path, file_name)
+                    avg_fitness_by_version, std_dev_by_version, conf_int_by_version = process_csv_file(file_path)
+                    print('-----------------------------------')
+                    print('Experiment: ', folder_name)
+                    print('-----------------------------------')
+                    print('File: ', file_name)
+                    print('Avg fitness by version: ', avg_fitness_by_version)
+                    print('Conf int by version: ', conf_int_by_version)
+                    print('-----------------------------------')
 
-# result = pd.read_csv('results/vrp_experiments_v1_selection/vrp_experiments_v1_selection.csv')
-
-# #filter column generation == 100, group by version, and calculate mean, median, and std
-# result = result[result['generation'] == 100]
-
-# result = result.groupby(['version']).agg({'value': ['mean', 'median', 'std']})
-
-# print(result)
-
-
-## Questions
-# 1. Should we explain in more detail flatten or unflatten?
-# explicar brevemente sobre flatten e unflatten: mostrar que mudamos de uma estrutura para outra
-# 2. How many crossover and mutation do we need to implement? 
-# crossover = 2, mutation = 3
-# 3. FPS code to minimization problem, see if it's correct. 
-# neeed to implement correctly
-# 4. How detail should we need to write about the evaluation? Statistical theory?
-# tweet about explanation of the evaluation
-# 5. Is it enough have three variations for mut_prob and cross_prob?
-# yes
-
+if __name__ == '__main__':
+    main()
