@@ -9,6 +9,7 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 
 def update_dictionary(dictionary, mapping_dict):
+    ''' Read the yaml file as a JSON and update the values (strings) with the corresponding functions from the mapping_dict '''
     for key, value in dictionary.items():
         try:
             dictionary[key] = mapping_dict[value]
@@ -24,6 +25,21 @@ def update_dictionary(dictionary, mapping_dict):
     return dictionary
 
 def generate_experiments(experiments_configuration, experimentation_name, version, mapping_dict, N, stats_test, show_figure=False):
+    """
+    Generate experiments based on the configuration yaml file
+    Args:
+        experiments_configuration: dictionary with the experiments configuration
+        experimentation_name: name of the experiment
+        version: version of the experiment
+        mapping_dict: dictionary with the mapping of the functions
+        N: number of iterations for each experiment
+        stats_test: parametric or non-parametric test to be performed
+        show_figure: show the figure with the results
+
+    Returns: Plot with the statistical results and file containing the experiment data (csv file with the results and a png image with the plot)
+
+    """
+
     pop_params = update_dictionary(
         experiments_configuration[experimentation_name]['population_parameters'],
         mapping_dict
@@ -115,7 +131,7 @@ def perform_statistical_test(df, test_type, level, column='value'):
 
 def experiment(experiment_name,pop_params,N,stats_test,show_figure, *args):
     """
-
+    Run simulations for different GA configurations and perform statistical tests
     Args:
         experiment_name : name of the experiment and the folder created in the results folder
         pop_params : dictionary with the population parameters of the GA algorithm
